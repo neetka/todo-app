@@ -2,9 +2,11 @@
 const express = require("express");
 const { createTodo } = require("./types");
 const { parse } = require("postcss");
+const cors = require ("cors");
 const { todo } = require("./db");
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.post("/todo", async function(req, res){
     const createPayload = req.body;
     const parsePayload = createTodo.safeParse(createPayload);
@@ -14,13 +16,13 @@ app.post("/todo", async function(req, res){
         })
         return;
     }
-    //put it in mongoDb 
+   
     await todo.create({
         title: createPayload.title,
         description: createPayload.description,
         completed: false
     })
-    res.json({
+    res.status(200).json({
         msg: "Todo created"
     })
 })
@@ -48,6 +50,6 @@ app.put("/completed", async function(req, res){
         msg: "Todo marked as completed"
     })
 })
-app.listen(3000,()=>{
+app.listen(4000,()=>{
     console.log("thanks to arvind")
 });
